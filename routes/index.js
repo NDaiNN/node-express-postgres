@@ -41,6 +41,27 @@ router.post('/', function (req, res, next) {
     });
 });
 
+
+router.post('/complete/:id', function (req, res, next) {
+  const isAuth = req.isAuthenticated();
+  const taskId = req.params.id;
+  knex("tasks")
+    .where({ id: taskId })
+    .update({ completed: true })
+    .then(function () {
+      res.redirect('/');
+    })
+    .catch(function (err) {
+      console.error(err);
+      res.render('index', {
+        title: 'ToDo App',
+        isAuth: isAuth,
+        errorMessage: [err.sqlMessage],
+      });
+    });
+});
+
+
 router.use('/signup', require('./signup'));
 router.use('/signin', require('./signin'));
 router.use('/logout', require('./logout'));
