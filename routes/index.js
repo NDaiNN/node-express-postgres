@@ -6,6 +6,7 @@ router.get('/', function (req, res, next) {
   const isAuth = req.isAuthenticated();
   knex("tasks")
     .select("*")
+    .where({ completed: false })
     .then(function (results) {
       res.render('index', {
         title: 'ToDo App',
@@ -27,7 +28,7 @@ router.post('/', function (req, res, next) {
   const isAuth = req.isAuthenticated();
   const todo = req.body.add;
   knex("tasks")
-    .insert({user_id: 1, content: todo})
+    .insert({ user_id: 1, content: todo })
     .then(function () {
       res.redirect('/')
     })
@@ -40,7 +41,6 @@ router.post('/', function (req, res, next) {
       });
     });
 });
-
 
 router.post('/complete/:id', function (req, res, next) {
   const isAuth = req.isAuthenticated();
@@ -60,7 +60,6 @@ router.post('/complete/:id', function (req, res, next) {
       });
     });
 });
-
 
 router.use('/signup', require('./signup'));
 router.use('/signin', require('./signin'));
